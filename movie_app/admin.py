@@ -1,10 +1,40 @@
 from django.contrib import admin, messages
 
-from .models import Movie
+from .models import Movie, Director, Actor, DressingRoom
 from django.db.models import QuerySet
 
 
 # Register your models here.
+
+
+# admin.site.register(Director)
+# admin.site.register(Actor)
+# admin.site.register(DressingRoom)
+
+@admin.register(DressingRoom)
+class DressingRoomAdmin(admin.ModelAdmin):
+    list_display = ['floor', 'number', 'actor']
+
+
+@admin.register(Actor)
+class ActorAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('first_name', 'last_name')}
+    list_display = ['last_name', 'first_name', 'gender']
+    list_editable = ['first_name', 'gender']
+    list_per_page = 10
+    search_fields = ['first_name', 'last_name', 'gender']
+    list_filter = ['first_name', 'last_name', 'gender']
+
+
+@admin.register(Director)
+class DirectorAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('first_name', 'last_name')}
+    list_display = ['last_name', 'first_name', 'director_email']
+    list_editable = ['director_email']
+    list_per_page = 10
+    search_fields = ['first_name', 'last_name', 'director_email']
+    list_filter = ['first_name', 'last_name', 'director_email']
+
 
 class RatingFilter(admin.SimpleListFilter):
     title = 'Фильтр по рейтингу'
@@ -35,8 +65,9 @@ class MovieAdmin(admin.ModelAdmin):
     # exclude = ['slug']
     # readonly_fields = ['year']
     prepopulated_fields = {'slug': ('name',)}
-    list_display = ['name', 'rating', 'currency', 'budget', 'rating_status']
-    list_editable = ['rating', 'currency', 'budget']
+    list_display = ['name', 'rating', 'director', 'budget', 'rating_status']
+    list_editable = ['rating', 'director', 'budget']
+    filter_vertical = ['actors']
     ordering = ['-rating', '-name']
     list_per_page = 10
     actions = ['set_dollars', 'set_euro']
@@ -65,5 +96,3 @@ class MovieAdmin(admin.ModelAdmin):
             f'Было обновлено {count_updated} записей.',
             messages.ERROR
         )
-
-# admin.site.register(Movie, MovieAdmin)

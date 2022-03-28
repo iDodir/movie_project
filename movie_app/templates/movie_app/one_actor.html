@@ -1,0 +1,31 @@
+{% extends 'movie_app/base.html' %}
+
+{% block title %}
+    {% if actor.gender == 'F' %}
+        Актриса
+    {% else %}
+        Актер
+    {% endif %}
+     - {{ actor.first_name }} {{ actor.last_name }}
+{% endblock %}
+
+{% block content %}
+    <h2>Информация об
+        {% if actor.gender == 'F' %}
+        актрисе
+    {% else %}
+        актере
+    {% endif %}
+    </h2>
+    <hr>
+    <h3>Имя - {{ actor.first_name }}</h3>
+    <h3>Фамилия - {{ actor.last_name }}</h3>
+    <h3>Пол - {{ actor.gender }}</h3>
+    <hr>
+    <h2>Список фильмов</h2>
+    <ul>
+        {% for movie in actor.movies.all %}
+            <li><a href="{{ movie.get_url }}">{{ movie }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
